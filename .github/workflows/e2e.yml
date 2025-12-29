@@ -1,0 +1,33 @@
+name: End to End Tests
+
+on:
+  workflow_dispatch:
+  deployment_status:
+
+env:
+  CI: true
+
+jobs:
+  run-tests:
+    if: github.event_name == 'workflow_dispatch' || (github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'production')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm exec playwright install-deps
+
+      - run: pnpm exec playwright install
+
+      - run: pnpm tests:e2e
