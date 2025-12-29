@@ -1,0 +1,108 @@
+name: Deploy - App
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}-${{ github.job != 'deploy' && github.job || '' }}
+  cancel-in-progress: ${{ github.job != 'deploy' }}
+
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: '${{ runner.os }}-turbo-${{ github.sha }}'
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - uses: actions/setup-node@v4
+
+      - run: pnpm install --frozen-lockfile
+
+  static-analysis:
+    runs-on: ubuntu-latest
+    needs: [dependencies]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: '${{ runner.os }}-turbo-${{ github.sha }}'
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - uses: actions/setup-node@v4
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm type-check --filter=app
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: [dependencies]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: '${{ runner.os }}-turbo-${{ github.sha }}'
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - uses: actions/setup-node@v4
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm tests --filter=app
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [dependencies, tests, static-analysis]
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: '${{ runner.os }}-turbo-${{ github.sha }}'
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - uses: actions/setup-node@v4
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm vercel --yes --token=${{ secrets.VERCEL_TOKEN }} --prod
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_APP_PROJECT_ID }}

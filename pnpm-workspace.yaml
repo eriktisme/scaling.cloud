@@ -1,0 +1,13 @@
+packages:
+  - apps/*
+  - packages/*
+  - internal-packages/*
+
+linkWorkspacePackages: false
+preferOffline: true
+preferWorkspacePackages: true
+sideEffectsCache: false
+
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver

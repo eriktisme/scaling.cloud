@@ -1,0 +1,33 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "envMode": "loose",
+  "globalDependencies": [
+    ".npmrc",
+    ".nvmrc",
+    "eslint.config.mjs",
+    "package.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json"],
+      "outputLogs": "new-only",
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "tests": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json"],
+      "outputLogs": "new-only",
+      "outputs": []
+    },
+    "type-check": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json"],
+      "outputLogs": "new-only",
+      "outputs": []
+    }
+  },
+  "ui": "stream"
+}

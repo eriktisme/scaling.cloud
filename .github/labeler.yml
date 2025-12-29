@@ -1,0 +1,7 @@
+# See https://github.com/actions/labeler
+
+app:
+  - apps/app/**
+
+actions:
+  - .github/workflows/**
