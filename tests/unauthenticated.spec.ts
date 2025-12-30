@@ -10,4 +10,10 @@ test.describe('rendering', () => {
 
     await expect(page).toHaveTitle(/scaling.cloud/)
   })
+
+  test('has sign in page', async ({ page }) => {
+    await page.goto('/sign-in')
+
+    await expect(page).toHaveTitle(/Sign In | scaling.cloud/)
+  })
 })
