@@ -3,6 +3,9 @@ import './globals.css'
 import { ReactNode } from 'react'
 import { ClerkLoaded, ClerkLoading, ClerkProvider } from '@clerk/nextjs'
 import { Spinner } from '@/components/ui/spinner'
+import { Toaster } from '@/components/ui/sonner'
+import { Providers } from './providers'
+import { NextIntlClientProvider } from 'next-intl'
 
 export const metadata: Metadata = {
   title: {
@@ -28,7 +31,12 @@ export default function RootLayout({
               </div>
             </div>
           </ClerkLoading>
-          <ClerkLoaded>{children}</ClerkLoaded>
+          <ClerkLoaded>
+            <NextIntlClientProvider>
+              <Providers>{children}</Providers>
+            </NextIntlClientProvider>
+          </ClerkLoaded>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

@@ -10,6 +10,7 @@ const eslintConfig = defineConfig([
     '**/.turbo/**',
     '**/out/**',
     '**/build/**',
+    '**/.build/**',
     '**/next-env.d.ts',
   ]),
   prettier,
