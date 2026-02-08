@@ -1,0 +1,6 @@
+{
+  "name": "stripe",
+  "devDependencies": {
+    "@stripe/ui-extension-sdk": "^9.1.0"
+  }
+}
