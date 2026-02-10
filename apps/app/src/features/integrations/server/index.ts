@@ -15,10 +15,10 @@ import {
 } from '@/server/schema'
 import { env } from '@/env'
 import { auth } from '@clerk/nextjs/server'
-import { billingAccounts, createConnection } from '@/lib/database'
+import { billingAccounts, createConnection } from '@internal/database'
 import { eq } from 'drizzle-orm'
 
-const connection = createConnection()
+const connection = createConnection(env.DATABASE_URL)
 
 export const app = new OpenAPIHono()
 

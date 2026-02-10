@@ -1,5 +1,5 @@
 import { pgTable, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core'
-import { organizations } from '@/lib/database'
+import { organizations } from './organizations'
 
 export const billingAccounts = pgTable(
   'billing_accounts',

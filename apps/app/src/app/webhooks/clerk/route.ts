@@ -9,9 +9,9 @@ import type { NextRequest } from 'next/server'
 import { Webhook } from 'svix'
 
 import { env } from '@/env'
-import { createConnection, organizations, users } from '@/lib/database'
+import { createConnection, organizations, users } from '@internal/database'
 
-const connection = createConnection()
+const connection = createConnection(env.DATABASE_URL)
 
 async function handleOrganizationCreated(data: OrganizationJSON) {
   await connection

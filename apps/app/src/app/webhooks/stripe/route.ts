@@ -2,7 +2,7 @@ import { env } from '@/env'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createNodeLogger } from '@internal/logger'
-import { billingAccounts, createConnection } from '@/lib/database'
+import { billingAccounts, createConnection } from '@internal/database'
 import { and, eq } from 'drizzle-orm'
 
 const logger = createNodeLogger({
@@ -10,7 +10,7 @@ const logger = createNodeLogger({
   context: 'stripe-webhook',
 })
 
-const connection = createConnection()
+const connection = createConnection(env.DATABASE_URL)
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-12-15.clover',
