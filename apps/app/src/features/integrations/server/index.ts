@@ -6,6 +6,7 @@ import {
   Integration,
   IntegrationParamsSchema,
   IntegrationResponseSchema,
+  IntegrationsResponseSchema,
 } from './schema'
 import {
   BadRequestErrorSchema,
@@ -15,10 +16,44 @@ import {
 import { env } from '@/env'
 import { auth } from '@clerk/nextjs/server'
 import { billingAccounts, createConnection } from '@/lib/database'
+import { eq } from 'drizzle-orm'
 
 const connection = createConnection()
 
 export const app = new OpenAPIHono()
+
+const list = createRoute({
+  method: 'get',
+  path: '/integrations',
+  summary: 'Lists Integrations',
+  description: 'Lists all Integrations for the Organization.',
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: IntegrationsResponseSchema,
+        },
+      },
+      description: 'Success',
+    },
+    401: {
+      content: {
+        'application/json': {
+          schema: NotAuthorizedErrorSchema,
+        },
+      },
+      description: 'Not Authorized',
+    },
+    500: {
+      content: {
+        'application/json': {
+          schema: InvalidServerErrorSchema,
+        },
+      },
+      description: 'Invalid Server',
+    },
+  },
+})
 
 const post = createRoute({
   method: 'post',
@@ -120,6 +155,56 @@ const authorize = createRoute({
       description: 'Invalid Server',
     },
   },
+})
+
+app.openapi(list, async (c) => {
+  const { userId, orgId } = await auth()
+
+  if (!orgId || !userId) {
+    return c.json(
+      {
+        code: 'not_authorized',
+        type: 'not_authorized_error',
+        statusCode: 401,
+        requestId: '',
+      },
+      401
+    )
+  }
+
+  const integrations = await connection
+    .select()
+    .from(billingAccounts)
+    .where(eq(billingAccounts.orgId, orgId))
+
+  const response = IntegrationsResponseSchema.safeParse({
+    data: integrations.map((integration) => ({
+      id: integration.id,
+      name: integration.provider,
+      created_at:
+        typeof integration.createdAt === 'string'
+          ? integration.createdAt
+          : integration.createdAt.toISOString(),
+    })),
+  })
+
+  if (!response.success) {
+    return c.json(
+      {
+        code: 'invalid_response',
+        type: 'invalid_response_error',
+        statusCode: 500,
+        requestId: '',
+      },
+      {
+        status: 500,
+      }
+    )
+  }
+
+  return c.json(response.data, {
+    status: 200,
+  })
 })
 
 app.openapi(post, async (c) => {
