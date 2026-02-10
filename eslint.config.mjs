@@ -10,6 +10,7 @@ const eslintConfig = defineConfig([
     '**/.turbo/**',
     '**/out/**',
     '**/build/**',
+    '**/languages/**',
     '**/.build/**',
     '**/next-env.d.ts',
   ]),

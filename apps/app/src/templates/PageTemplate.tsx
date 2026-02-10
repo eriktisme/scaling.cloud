@@ -7,9 +7,11 @@ interface Props extends PropsWithChildren {
   titleClassName?: HTMLAttributes<HTMLDivElement>['className']
   containerClassName?: HTMLAttributes<HTMLDivElement>['className']
   description?: string
+  isLoading?: boolean
+  skeleton?: ReactNode
 }
 
-export const PageTemplate = (props: Props) => {
+export const PageTemplate = ({ isLoading = false, ...props }: Props) => {
   return (
     <div
       className="flex-1 touch-pan-y overflow-y-scroll overscroll-contain"
@@ -44,7 +46,7 @@ export const PageTemplate = (props: Props) => {
             </header>
           ) : null}
           <div className="w-full flex flex-col gap-4 md:gap-6 px-4 md:px-0">
-            {props.children}
+            {isLoading ? props.skeleton : props.children}
           </div>
         </div>
       </div>

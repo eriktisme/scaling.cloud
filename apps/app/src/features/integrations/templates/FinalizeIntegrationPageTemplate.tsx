@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react'
 import { toast } from 'sonner'
 
 import { useCreateIntegration } from '../api'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   code: string
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export const FinalizeIntegrationPageTemplate = (props: Props) => {
+  const router = useRouter()
+
   const createIntegration = useCreateIntegration({
     mutationConfig: {
       onSuccess: () => {
@@ -30,8 +33,12 @@ export const FinalizeIntegrationPageTemplate = (props: Props) => {
 
     if (!result.success) {
       toast.error('Failed to connect integration')
+    } else {
+      toast.success('Integration connected successfully')
     }
-  }, [createIntegration, props.code, props.provider])
+
+    router.push('/')
+  }, [createIntegration, props.code, props.provider, router])
 
   useEffect(() => {
     void onCreateIntegration()
