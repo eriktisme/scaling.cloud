@@ -1,4 +1,3 @@
-import { v4 } from 'uuid'
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import {
   AuthorizeBodySchema,
@@ -15,6 +14,9 @@ import {
 } from '@/server/schema'
 import { env } from '@/env'
 import { auth } from '@clerk/nextjs/server'
+import { billingAccounts, createConnection } from '@/lib/database'
+
+const connection = createConnection()
 
 export const app = new OpenAPIHono()
 
@@ -330,19 +332,32 @@ class StripeGetAccessTokenStrategy implements GetAccessTokenStrategy {
 
     /**
      * We want to store the refresh token in a secure storage,
-     * but for now we will just return a successful response with a fake integration.
+     * but for now we will just return a successful response.
      */
     const response: StripeGetTokenResponse = await request.json()
 
-    console.log('Stripe token response', {
-      accountId: response.stripe_user_id,
-    })
+    const [billingAccount] = await connection
+      .insert(billingAccounts)
+      .values({
+        provider: 'stripe',
+        providerAccountId: response.stripe_user_id,
+        orgId: params.orgId,
+        status: 'connected',
+      })
+      .returning()
+
+    if (!billingAccount) {
+      return {
+        success: false,
+        error: 'Could not create billing account',
+      }
+    }
 
     return {
       success: true,
       integration: {
-        id: v4(),
-        createdAt: new Date(),
+        id: billingAccount.id,
+        createdAt: billingAccount.createdAt,
       },
     }
   }

@@ -8,14 +8,12 @@ interface Params {
   body?: AuthorizeBody
 }
 
+type Result =
+  | { error: string; success: false }
+  | { data: string; success: true }
+
 interface UseAuthorizeUrlOptions {
-  mutationConfig?: MutationConfig<
-    (
-      params: Params
-    ) => Promise<
-      { error?: string; success: false } | { data: string; success: true }
-    >
-  >
+  mutationConfig?: MutationConfig<(params: Params) => Promise<Result>>
 }
 
 export const useAuthorizeUrl = ({ mutationConfig }: UseAuthorizeUrlOptions) => {
@@ -26,7 +24,7 @@ export const useAuthorizeUrl = ({ mutationConfig }: UseAuthorizeUrlOptions) => {
       await onSuccess?.(...args)
     },
     ...restConfig,
-    mutationFn: async (params: Params) => {
+    mutationFn: async (params: Params): Promise<Result> => {
       const request = await fetch(
         `/api/integrations/${params.provider}/authorize-url`,
         {
