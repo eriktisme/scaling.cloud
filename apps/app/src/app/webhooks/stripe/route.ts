@@ -1,5 +1,5 @@
 import { env } from '@/env'
-import { NextRequest, NextResponse } from 'next/server'
+import { after, NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createNodeLogger } from '@internal/logger'
 import {
@@ -8,6 +8,11 @@ import {
   createConnection,
 } from '@internal/database'
 import { and, eq } from 'drizzle-orm'
+import {
+  EventBridgeClient,
+  PutEventsCommand,
+} from '@aws-sdk/client-eventbridge'
+import { BillingEventReceivedEvent } from '@internal/events-schema'
 
 const logger = createNodeLogger({
   service: 'app',
@@ -15,6 +20,8 @@ const logger = createNodeLogger({
 })
 
 const connection = createConnection(env.DATABASE_URL)
+
+const eventBridgeClient = new EventBridgeClient()
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-12-15.clover',
@@ -40,17 +47,6 @@ export async function POST(request: NextRequest) {
       },
       {
         status: 400,
-      }
-    )
-  }
-
-  if (!stripeEvent) {
-    return NextResponse.json(
-      {
-        ok: false,
-      },
-      {
-        status: 500,
       }
     )
   }
@@ -120,9 +116,34 @@ export async function POST(request: NextRequest) {
     .returning()
     .onConflictDoNothing()
 
-  /**
-   * Push the event to a queue for processing.
-   */
+  after(async () => {
+    /**
+     * Push the event to a queue for processing.
+     */
+    await eventBridgeClient.send(
+      new PutEventsCommand({
+        /**
+         * We send the event only once, even if there are multiple billing accounts,
+         * because the event processor will query the database
+         * for all matching billing events and process them accordingly.
+         */
+        Entries: [
+          {
+            Time: new Date(),
+            EventBusName: env.EVENT_BUS_NAME,
+            Source: 'stripe',
+            DetailType: BillingEventReceivedEvent.eventName,
+            Detail: JSON.stringify(
+              BillingEventReceivedEvent.toEventBridgeEventDetail({
+                id: stripeEvent.id,
+                provider: 'stripe',
+              })
+            ),
+          },
+        ],
+      })
+    )
+  })
 
   return NextResponse.json(
     {
