@@ -4,27 +4,25 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "db:generate:migration": "SKIP_ENV_VALIDATION=1 drizzle-kit generate",
-    "db:migrate": "SKIP_ENV_VALIDATION=1 drizzle-kit migrate",
     "dev": "next dev",
     "start": "next start",
     "tests": "NODE_ENV=test vitest run --passWithNoTests",
     "type-check": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@aws-sdk/client-eventbridge": "^3.956.0",
     "@clerk/backend": "^2.29.0",
     "@clerk/nextjs": "^6.36.3",
     "@hono/swagger-ui": "^0.5.2",
     "@hono/zod-openapi": "^1.2.0",
     "@icons-pack/react-simple-icons": "^13.8.0",
-    "@neondatabase/serverless": "^1.0.2",
+    "@internal/database": "workspace:*",
+    "@internal/events-schema": "workspace:*",
+    "@internal/logger": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tanstack/react-query": "^5.90.12",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "dotenv": "^17.2.4",
-    "drizzle-kit": "^0.31.9",
-    "drizzle-orm": "^0.45.1",
     "hono": "^4.11.8",
     "lucide-react": "^0.562.0",
     "next": "16.1.6",
@@ -34,9 +32,9 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "sonner": "^2.0.7",
+    "stripe": "^20.1.2",
     "svix": "^1.82.0",
-    "tailwind-merge": "^3.4.0",
-    "zod": "^4.3.6"
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

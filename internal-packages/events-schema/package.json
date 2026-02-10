@@ -1,0 +1,13 @@
+{
+  "name": "@internal/events-schema",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint src",
+    "type-check": "tsc --noEmit --emitDeclarationOnly false"
+  }
+}

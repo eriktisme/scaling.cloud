@@ -1,0 +1,22 @@
+{
+  "name": "event-processor",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "app": "bin/app.ts"
+  },
+  "scripts": {
+    "cdk": "cdk",
+    "tests": "NODE_ENV=test vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@evandam93/cdk-utils": "^0.0.3",
+    "aws-cdk-lib": "^2.233.0",
+    "constructs": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "aws-cdk": "^2.1100.1",
+    "ts-node": "^10.9.2"
+  }
+}

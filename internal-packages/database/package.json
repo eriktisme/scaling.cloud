@@ -1,0 +1,19 @@
+{
+  "name": "@internal/database",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "db:generate:migration": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "lint": "eslint src",
+    "type-check": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "devDependencies": {
+    "dotenv": "^17.2.4",
+    "drizzle-kit": "^0.31.9"
+  }
+}

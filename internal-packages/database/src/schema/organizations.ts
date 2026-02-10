@@ -2,7 +2,7 @@ import { pgTable, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core'
 
 export const organizations = pgTable('organizations', {
   id: varchar('id').primaryKey(),
-  createdAt: timestamp({
+  createdAt: timestamp('created_at', {
     withTimezone: true,
   })
     .notNull()
