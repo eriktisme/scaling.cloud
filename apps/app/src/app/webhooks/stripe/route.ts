@@ -2,7 +2,11 @@ import { env } from '@/env'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createNodeLogger } from '@internal/logger'
-import { billingAccounts, createConnection } from '@internal/database'
+import {
+  billingAccounts,
+  billingEvents,
+  createConnection,
+} from '@internal/database'
 import { and, eq } from 'drizzle-orm'
 
 const logger = createNodeLogger({
@@ -67,19 +71,23 @@ export async function POST(request: NextRequest) {
   }
 
   /**
-   * Check if the billing account is "active" in the future.
+   * We allow multiple customers to connect to the same billing account,
+   * so we need to find all accounts that match the provider account ID and provider.
    */
-  const [billingAccount] = await connection
+  const accounts = await connection
     .select()
     .from(billingAccounts)
     .where(
+      /**
+       * In the future also check for the status of the billing account to make sure it's active.
+       */
       and(
         eq(billingAccounts.providerAccountId, stripeEvent.account),
         eq(billingAccounts.provider, 'stripe')
       )
     )
 
-  if (!billingAccount) {
+  if (accounts.length === 0) {
     logger.error('No billing account found for Stripe event', {
       eventId: stripeEvent.id,
       accountId: stripeEvent.account,
@@ -95,8 +103,25 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  const events: (typeof billingEvents.$inferInsert)[] = accounts.map(
+    (account) => ({
+      orgId: account.orgId,
+      provider: 'stripe',
+      providerEventId: stripeEvent.id,
+      providerAccountId: account.providerAccountId,
+      billingAccountId: account.id,
+      payload: JSON.stringify(stripeEvent),
+    })
+  )
+
+  await connection
+    .insert(billingEvents)
+    .values(events)
+    .returning()
+    .onConflictDoNothing()
+
   /**
-   * Do something with the event here.
+   * Push the event to a queue for processing.
    */
 
   return NextResponse.json(
