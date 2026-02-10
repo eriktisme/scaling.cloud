@@ -6,5 +6,8 @@
       "name": "Stripe",
       "description": "Connect Stripe to start analyzing your data and gain insights into your customers and revenue."
     }
+  },
+  "IntegrationsPageTemplate": {
+    "title": "Integrations"
   }
 }
