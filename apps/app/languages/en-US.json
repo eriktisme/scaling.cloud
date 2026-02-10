@@ -1,0 +1,10 @@
+{
+  "IntegrationCard": {
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "stripe": {
+      "name": "Stripe",
+      "description": "Connect Stripe to start analyzing your data and gain insights into your customers and revenue."
+    }
+  }
+}

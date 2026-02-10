@@ -20,14 +20,10 @@ jobs:
         with:
           run_install: false
 
-      - uses: actions/cache@v4
+      - uses: actions/setup-node@v6
         with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - uses: actions/setup-node@v4
+          node-version-file: '.nvmrc'
+          cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 
@@ -42,14 +38,10 @@ jobs:
         with:
           run_install: false
 
-      - uses: actions/cache@v4
+      - uses: actions/setup-node@v6
         with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - uses: actions/setup-node@v4
+          node-version-file: '.nvmrc'
+          cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 
@@ -66,14 +58,10 @@ jobs:
         with:
           run_install: false
 
-      - uses: actions/cache@v4
+      - uses: actions/setup-node@v6
         with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - uses: actions/setup-node@v4
+          node-version-file: '.nvmrc'
+          cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 
@@ -91,14 +79,10 @@ jobs:
         with:
           run_install: false
 
-      - uses: actions/cache@v4
+      - uses: actions/setup-node@v6
         with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - uses: actions/setup-node@v4
+          node-version-file: '.nvmrc'
+          cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 

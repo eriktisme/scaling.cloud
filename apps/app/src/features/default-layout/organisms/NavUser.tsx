@@ -33,7 +33,11 @@ export const NavUser = () => {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarFallback className="rounded-lg">
-                  {getInitials(user?.fullName)}
+                  {getInitials(
+                    user?.fullName ??
+                      user?.emailAddresses?.at(0)?.emailAddress ??
+                      ''
+                  )}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
