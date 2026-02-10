@@ -12,6 +12,7 @@ export const env = createEnv({
     STRIPE_CLIENT_ID: process.env.STRIPE_CLIENT_ID,
     STRIPE_REDIRECT_URL: process.env.STRIPE_REDIRECT_URL,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_SIGNING_SECRET: process.env.STRIPE_SIGNING_SECRET,
   },
   server: {
     CLERK_SECRET_KEY: z.string().min(1),
@@ -20,6 +21,7 @@ export const env = createEnv({
     STRIPE_CLIENT_ID: z.string().min(1),
     STRIPE_REDIRECT_URL: z.string().min(1),
     STRIPE_SECRET_KEY: z.string().min(1),
+    STRIPE_SIGNING_SECRET: z.string().min(1),
   },
   skipValidation: !!process.env.CI || !!process.env.SKIP_ENV_VALIDATION,
 })
