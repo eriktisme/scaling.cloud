@@ -16,6 +16,12 @@
       "outputLogs": "new-only",
       "outputs": ["dist/**", ".next/**"]
     },
+    "cdk": {
+      "dependsOn": [],
+      "inputs": ["bin/**", "lib/**", "src/**", "tsconfig.json"],
+      "outputLogs": "new-only",
+      "outputs": ["cdk.out/**"]
+    },
     "tests": {
       "dependsOn": ["^build"],
       "inputs": ["src/**", "tsconfig.json"],
