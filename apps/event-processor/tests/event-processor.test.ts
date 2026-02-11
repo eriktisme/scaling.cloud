@@ -1,10 +1,16 @@
 import { describe, it } from 'vitest'
 import { App } from 'aws-cdk-lib'
 import { Template, Match } from 'aws-cdk-lib/assertions'
-import { EventProcessorStack } from '../lib/event-processor-stack'
-import { StackProps } from '@evandam93/cdk-utils'
+import {
+  EventProcessorStack,
+  EventProcessorStackProps,
+} from '../lib/event-processor-stack'
 
-const defaultProps: StackProps = {
+const defaultProps: EventProcessorStackProps = {
+  databaseUrl: 'postgresql://user:password@host:5432/db',
+  stripe: {
+    secretKey: 'sk_test_1234567890abcdef',
+  },
   env: {
     region: 'eu-west-1',
   },

@@ -106,6 +106,7 @@ export async function POST(request: NextRequest) {
       providerEventId: stripeEvent.id,
       providerAccountId: account.providerAccountId,
       billingAccountId: account.id,
+      type: stripeEvent.type,
       payload: JSON.stringify(stripeEvent),
     })
   )
@@ -124,8 +125,8 @@ export async function POST(request: NextRequest) {
       new PutEventsCommand({
         /**
          * We send the event only once, even if there are multiple billing accounts,
-         * because the event processor will query the database
-         * for all matching billing events and process them accordingly.
+         * we will query the database for all matching billing events,
+         * and process them accordingly.
          */
         Entries: [
           {
