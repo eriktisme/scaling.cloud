@@ -5,7 +5,7 @@ import { User } from 'aws-cdk-lib/aws-iam'
 import { BillingEventsReceivedProcessor } from './billing-events-received-processor'
 import { StripeProps } from './types'
 
-interface EventProcessorStackProps extends StackProps {
+export interface EventProcessorStackProps extends StackProps {
   databaseUrl: string
   stripe: StripeProps
 }
@@ -28,9 +28,10 @@ export class EventProcessorStack extends Stack {
 
     eventBus.grantPutEventsTo(eventPusher)
 
-    new BillingEventsReceivedProcessor(this, 'event-processor', {
+    new BillingEventsReceivedProcessor(this, 'billing-events-received', {
       databaseUrl: props.databaseUrl,
       eventBus,
+      stripe: props.stripe,
     })
   }
 }
