@@ -1,0 +1,9 @@
+{
+  "name": "stripe",
+  "scripts": {
+    "create-synthetic-data": "tsx src/index.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}
