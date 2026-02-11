@@ -5,3 +5,7 @@ export interface TranslateBillingReceivedEventPort {
     event: typeof billingEvents.$inferSelect
   ): Promise<typeof domainEvents.$inferInsert>
 }
+
+export interface EventsPublisherPort {
+  publish(events: (typeof domainEvents.$inferInsert)[]): Promise<void>
+}

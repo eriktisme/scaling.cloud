@@ -1,12 +1,11 @@
 import { TranslateBillingReceivedEventPort } from './types'
-import { billingEvents, domainEvents } from '@internal/database'
 
 export class TranslateBillingReceivedEvent {
   protected adapter: TranslateBillingReceivedEventPort
 
   async translate(
-    event: typeof billingEvents.$inferSelect
-  ): Promise<typeof domainEvents.$inferInsert> {
+    event: Parameters<TranslateBillingReceivedEventPort['translate']>[0]
+  ): ReturnType<TranslateBillingReceivedEventPort['translate']> {
     return this.adapter.translate(event)
   }
 

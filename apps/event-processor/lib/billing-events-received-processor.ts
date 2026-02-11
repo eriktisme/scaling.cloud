@@ -18,7 +18,7 @@ export class BillingEventsReceivedProcessor extends Construct {
 
     const stack = Stack.getStack(this)
 
-    new EventConsumer(this, 'consumer', {
+    const { handler } = new EventConsumer(this, 'consumer', {
       eventBus: props.eventBus,
       /**
        * We process only 'billing-events.received',
@@ -48,5 +48,7 @@ export class BillingEventsReceivedProcessor extends Construct {
         runtime: Runtime.NODEJS_24_X,
       },
     })
+
+    props.eventBus.grantPutEventsTo(handler)
   }
 }

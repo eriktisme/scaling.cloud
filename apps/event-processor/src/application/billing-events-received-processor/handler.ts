@@ -7,16 +7,21 @@ import {
   domainEvents,
 } from '@internal/database'
 import { z } from 'zod'
-import { TranslateBillingReceivedEvent } from '../../core'
-import { StripeTranslateBillingReceivedEventAdapter } from '../../adapters'
+import { EventsPublisher, TranslateBillingReceivedEvent } from '../../core'
+import {
+  StripeTranslateBillingReceivedEventAdapter,
+  EventBridgeEventsPublisherAdapter,
+} from '../../adapters'
 import { inArray } from 'drizzle-orm'
 
 const ConfigSchema = z.object({
   databaseUrl: z.string(),
+  eventBusName: z.string(),
 })
 
 const config = ConfigSchema.parse({
   databaseUrl: process.env.DATABASE_URL,
+  eventBusName: process.env.EVENT_BUS_NAME,
 })
 
 const logger = createNodeLogger({
@@ -25,6 +30,12 @@ const logger = createNodeLogger({
 })
 
 const connection = createConnection(config.databaseUrl)
+
+const eventsPublisher = new EventsPublisher(
+  new EventBridgeEventsPublisherAdapter({
+    eventBusName: config.eventBusName,
+  })
+)
 
 export async function buildHandler(event: SQSEvent) {
   const domainEventsToInsert: (typeof domainEvents.$inferInsert)[] = []
@@ -70,6 +81,10 @@ export async function buildHandler(event: SQSEvent) {
     }
 
     try {
+      /**
+       * We are translating billing events into domain events,
+       * this domain events ensure consistency.
+       */
       domainEventsToInsert.push(await translator.translate(existingEvent))
     } catch {
       /**
@@ -87,4 +102,6 @@ export async function buildHandler(event: SQSEvent) {
   }
 
   await connection.insert(domainEvents).values(domainEventsToInsert)
+
+  await eventsPublisher.publish(domainEventsToInsert)
 }

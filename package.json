@@ -9,6 +9,7 @@
     "type-check": "turbo run type-check"
   },
   "dependencies": {
+    "@aws-sdk/client-eventbridge": "^3.956.0",
     "@neondatabase/serverless": "^1.0.2",
     "drizzle-orm": "^0.45.1",
     "zod": "^4.3.6"

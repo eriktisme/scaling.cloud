@@ -10,7 +10,6 @@
     "type-check": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@aws-sdk/client-eventbridge": "^3.956.0",
     "@clerk/backend": "^2.29.0",
     "@clerk/nextjs": "^6.36.3",
     "@hono/swagger-ui": "^0.5.2",

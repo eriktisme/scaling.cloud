@@ -1,5 +1,4 @@
 import { TranslateBillingReceivedEventPort } from '../core'
-import { billingEvents, domainEvents } from '@internal/database'
 import Stripe from 'stripe'
 import { z } from 'zod'
 
@@ -17,8 +16,8 @@ const stripe = new Stripe(config.secretKey, {
 
 export class StripeTranslateBillingReceivedEventAdapter implements TranslateBillingReceivedEventPort {
   async translate(
-    event: typeof billingEvents.$inferSelect
-  ): Promise<typeof domainEvents.$inferInsert> {
+    event: Parameters<TranslateBillingReceivedEventPort['translate']>[0]
+  ): ReturnType<TranslateBillingReceivedEventPort['translate']> {
     const stripeEvent = await stripe.events.retrieve(event.providerEventId)
 
     switch (stripeEvent.type) {
