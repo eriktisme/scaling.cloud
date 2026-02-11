@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@evandam93/cdk-utils": "^0.0.3",
+    "@internal/database": "workspace:*",
+    "@internal/events-schema": "workspace:*",
+    "@internal/logger": "workspace:*",
+    "@middy/core": "^6.4.5",
     "aws-cdk-lib": "^2.233.0",
     "constructs": "^10.0.0"
   },

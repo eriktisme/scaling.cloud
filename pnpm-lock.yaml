@@ -48,6 +48,9 @@ importers:
       prettier:
         specifier: ^3.7.4
         version: 3.7.4
+      stripe:
+        specifier: ^20.1.2
+        version: 20.1.2(@types/node@24.10.4)
       turbo:
         specifier: ^2.7.0
         version: 2.7.0
@@ -138,9 +141,6 @@ importers:
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      stripe:
-        specifier: ^20.1.2
-        version: 20.1.2(@types/node@24.10.4)
       svix:
         specifier: ^1.82.0
         version: 1.82.0
@@ -181,6 +181,18 @@ importers:
       '@evandam93/cdk-utils':
         specifier: ^0.0.3
         version: 0.0.3(aws-cdk-lib@2.233.0(constructs@10.4.4))(constructs@10.4.4)
+      '@internal/database':
+        specifier: workspace:*
+        version: link:../../internal-packages/database
+      '@internal/events-schema':
+        specifier: workspace:*
+        version: link:../../internal-packages/events-schema
+      '@internal/logger':
+        specifier: workspace:*
+        version: link:../../internal-packages/logger
+      '@middy/core':
+        specifier: ^6.4.5
+        version: 6.4.5
       aws-cdk-lib:
         specifier: ^2.233.0
         version: 2.233.0(constructs@10.4.4)
@@ -1500,6 +1512,10 @@ packages:
     resolution: {integrity: sha512-uwPAhccfFJlsfCxMYTwOdVfOz3xqyj8xYL3zJj8f0pb30tLohnnFPhLuqp4/qoEz8sNxe4SESZedcBojRefIzg==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@middy/core@6.4.5':
+    resolution: {integrity: sha512-qRGCslDHjMr08fywcfVbWR9qpx16vGD481i9GpX3r5efi8Arjp/44JTjfeJkJJxvIb/8/+E9MLvU86+3oe1oJQ==}
+    engines: {node: '>=20'}
 
   '@mswjs/interceptors@0.41.2':
     resolution: {integrity: sha512-7G0Uf0yK3f2bjElBLGHIQzgRgMESczOMyYVasq1XK8P5HaXtlW4eQhz9MBL+TQILZLaruq+ClGId+hH0w4jvWw==}
@@ -7631,6 +7647,8 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@middy/core@6.4.5': {}
 
   '@mswjs/interceptors@0.41.2':
     dependencies:

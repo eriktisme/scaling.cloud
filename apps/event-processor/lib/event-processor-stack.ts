@@ -2,9 +2,16 @@ import { Construct } from 'constructs'
 import { Stack, StackProps } from '@evandam93/cdk-utils'
 import { EventBus } from 'aws-cdk-lib/aws-events'
 import { User } from 'aws-cdk-lib/aws-iam'
+import { BillingEventsReceivedProcessor } from './billing-events-received-processor'
+import { StripeProps } from './types'
+
+interface EventProcessorStackProps extends StackProps {
+  databaseUrl: string
+  stripe: StripeProps
+}
 
 export class EventProcessorStack extends Stack {
-  constructor(scope: Construct, id: string, props: StackProps) {
+  constructor(scope: Construct, id: string, props: EventProcessorStackProps) {
     super(scope, id, props)
 
     const eventBus = new EventBus(this, 'event-bus', {
@@ -20,5 +27,10 @@ export class EventProcessorStack extends Stack {
     })
 
     eventBus.grantPutEventsTo(eventPusher)
+
+    new BillingEventsReceivedProcessor(this, 'event-processor', {
+      databaseUrl: props.databaseUrl,
+      eventBus,
+    })
   }
 }
