@@ -106,6 +106,7 @@ export async function POST(request: NextRequest) {
       providerEventId: stripeEvent.id,
       providerAccountId: account.providerAccountId,
       billingAccountId: account.id,
+      type: stripeEvent.type,
       payload: JSON.stringify(stripeEvent),
     })
   )
