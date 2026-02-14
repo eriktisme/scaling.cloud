@@ -43,6 +43,13 @@
       "when": 1770794887202,
       "tag": "0005_awesome_leper_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1770998706896,
+      "tag": "0006_odd_wallop",
+      "breakpoints": true
     }
   ]
 }
