@@ -1,6 +1,10 @@
 import { z } from 'zod'
 
-export const CustomerCreatedPayload = z.object({
+const BasePayload = z.object({
+  metadata: z.record(z.string(), z.unknown()),
+})
+
+export const CustomerCreatedPayload = BasePayload.extend({
   customerId: z.string(),
   email: z.email().nullable(),
   name: z.string().nullable(),
@@ -8,7 +12,7 @@ export const CustomerCreatedPayload = z.object({
 
 export type CustomerCreatedPayload = z.infer<typeof CustomerCreatedPayload>
 
-export const ProductCreatedPayload = z.object({
+export const ProductCreatedPayload = BasePayload.extend({
   productId: z.string(),
   name: z.string(),
   description: z.string().nullable(),
@@ -16,7 +20,7 @@ export const ProductCreatedPayload = z.object({
 
 export type ProductCreatedPayload = z.infer<typeof ProductCreatedPayload>
 
-export const PriceCreatedPayload = z.object({
+export const PriceCreatedPayload = BasePayload.extend({
   priceId: z.string(),
   productId: z.string(),
   amount: z.object({
@@ -28,7 +32,7 @@ export const PriceCreatedPayload = z.object({
 
 export type PriceCreatedPayload = z.infer<typeof PriceCreatedPayload>
 
-export const SubscriptionCreatedPayload = z.object({
+export const SubscriptionCreatedPayload = BasePayload.extend({
   subscriptionId: z.string(),
   customerId: z.string(),
   currentPeriodStartedAt: z.iso.datetime(),
@@ -49,7 +53,7 @@ export type SubscriptionCreatedPayload = z.infer<
   typeof SubscriptionCreatedPayload
 >
 
-export const SubscriptionCancelledPayload = z.object({
+export const SubscriptionCancelledPayload = BasePayload.extend({
   subscriptionId: z.string(),
   customerId: z.string(),
   cancelledAt: z.iso.datetime(),
@@ -60,7 +64,7 @@ export type SubscriptionCancelledPayload = z.infer<
   typeof SubscriptionCancelledPayload
 >
 
-export const InvoicePaidPayload = z.object({
+export const InvoicePaidPayload = BasePayload.extend({
   amount: z.object({
     amount: z.number(),
     currency: z.string(),

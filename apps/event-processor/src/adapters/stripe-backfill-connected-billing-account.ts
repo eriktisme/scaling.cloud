@@ -111,6 +111,7 @@ export class StripeBackfillConnectedBillingAccount implements BackfillConnectedB
         customerId: customer.id,
         email: customer.email ?? null,
         name: customer.name ?? null,
+        metadata: customer.metadata ?? {},
       }
 
       return {
@@ -163,6 +164,7 @@ export class StripeBackfillConnectedBillingAccount implements BackfillConnectedB
         productId: product.id,
         name: product.name,
         description: product.description ?? null,
+        metadata: product.metadata ?? {},
       }
 
       return {
@@ -229,6 +231,7 @@ export class StripeBackfillConnectedBillingAccount implements BackfillConnectedB
             amount: price.unit_amount ?? 0,
           },
           interval: price.recurring.interval,
+          metadata: price.metadata ?? {},
         }
 
         return {
@@ -316,6 +319,7 @@ export class StripeBackfillConnectedBillingAccount implements BackfillConnectedB
           trialStartsAt: subscription.trial_start
             ? new Date(subscription.trial_start * 1000).toISOString()
             : null,
+          metadata: subscription.metadata ?? {},
         }
 
         return {
@@ -355,6 +359,7 @@ export class StripeBackfillConnectedBillingAccount implements BackfillConnectedB
             ? new Date(subscriptionItem.current_period_end * 1000).toISOString()
             : new Date(subscription.canceled_at * 1000).toISOString(),
           subscriptionId: subscription.id,
+          metadata: subscription.metadata ?? {},
         }
 
         return {
@@ -425,6 +430,7 @@ export class StripeBackfillConnectedBillingAccount implements BackfillConnectedB
           paidAt: new Date(
             invoice.status_transitions.paid_at * 1000
           ).toISOString(),
+          metadata: invoice.metadata ?? {},
         }
 
         return {

@@ -76,6 +76,7 @@ export class StripeTranslateBillingReceivedEventAdapter implements TranslateBill
             trialStartsAt: subscription.trial_start
               ? new Date(subscription.trial_start * 1000).toISOString()
               : null,
+            metadata: subscription.metadata ?? {},
           },
         }
       case 'customer.subscription.deleted':
@@ -106,6 +107,7 @@ export class StripeTranslateBillingReceivedEventAdapter implements TranslateBill
           effectiveAt: new Date(
             deletedSubscriptionItem.current_period_end * 1000
           ).toISOString(),
+          metadata: deletedSubscription.metadata ?? {},
         }
 
         return {
@@ -148,6 +150,7 @@ export class StripeTranslateBillingReceivedEventAdapter implements TranslateBill
           paidAt: new Date(
             invoice.status_transitions.paid_at * 1000
           ).toISOString(),
+          metadata: invoice.metadata ?? {},
         }
 
         return {
