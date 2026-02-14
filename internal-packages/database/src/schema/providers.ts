@@ -15,6 +15,9 @@ export const billingAccounts = pgTable(
      * but we may want to add more statuses in the future, such as 'disconnected' or 'paused'.
      */
     status: varchar('status').$type<'connected'>().notNull(),
+    /**
+     * This timestamp is used to determine when the billing account was connected.
+     */
     createdAt: timestamp('created_at', {
       withTimezone: true,
     })

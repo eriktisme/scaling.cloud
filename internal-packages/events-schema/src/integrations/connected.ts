@@ -11,7 +11,7 @@ export type IntegrationConnectedEventDetailMetadata = z.infer<
 
 export const IntegrationConnectedEventDetailDataSchema = z.object({
   id: z.string(),
-  provider: z.string(),
+  provider: z.union([z.literal('stripe')]),
 })
 
 export type IntegrationConnectedEventDetailData = z.infer<

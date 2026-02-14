@@ -1,5 +1,33 @@
 import { z } from 'zod'
 
+export const CustomerCreatedPayload = z.object({
+  customerId: z.string(),
+  email: z.email().nullable(),
+  name: z.string().nullable(),
+})
+
+export type CustomerCreatedPayload = z.infer<typeof CustomerCreatedPayload>
+
+export const ProductCreatedPayload = z.object({
+  productId: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+})
+
+export type ProductCreatedPayload = z.infer<typeof ProductCreatedPayload>
+
+export const PriceCreatedPayload = z.object({
+  priceId: z.string(),
+  productId: z.string(),
+  amount: z.object({
+    amount: z.number(),
+    currency: z.string(),
+  }),
+  interval: z.string(),
+})
+
+export type PriceCreatedPayload = z.infer<typeof PriceCreatedPayload>
+
 export const SubscriptionCreatedPayload = z.object({
   subscriptionId: z.string(),
   customerId: z.string(),
@@ -46,6 +74,9 @@ export const InvoicePaidPayload = z.object({
 export type InvoicePaidPayload = z.infer<typeof InvoicePaidPayload>
 
 export const BillingEventsPayload = z.union([
+  CustomerCreatedPayload,
+  ProductCreatedPayload,
+  PriceCreatedPayload,
   SubscriptionCreatedPayload,
   SubscriptionCancelledPayload,
   InvoicePaidPayload,
