@@ -1,7 +1,7 @@
 import { z } from '@hono/zod-openapi'
 
 export const IntegrationParamsSchema = z.object({
-  integration: z.string().openapi({
+  integration: z.union([z.literal('stripe')]).openapi({
     example: 'stripe',
     description: 'The name of the integration.',
   }),
