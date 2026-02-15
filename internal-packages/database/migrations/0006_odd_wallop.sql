@@ -1,0 +1,1 @@
+ALTER TABLE "domain_events" ADD COLUMN "version" varchar DEFAULT '1.0' NOT NULL;

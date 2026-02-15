@@ -1,4 +1,8 @@
-import { billingEvents, domainEvents } from '@internal/database'
+import {
+  billingAccounts,
+  billingEvents,
+  domainEvents,
+} from '@internal/database'
 
 export interface TranslateBillingReceivedEventPort {
   translate(
@@ -8,4 +12,10 @@ export interface TranslateBillingReceivedEventPort {
 
 export interface EventsPublisherPort {
   publish(events: (typeof domainEvents.$inferInsert)[]): Promise<void>
+}
+
+export interface BackfillConnectedBillingAccountPort {
+  createDomainEvents(
+    account: typeof billingAccounts.$inferSelect
+  ): Promise<(typeof domainEvents.$inferInsert)[]>
 }

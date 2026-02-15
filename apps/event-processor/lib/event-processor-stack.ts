@@ -4,6 +4,7 @@ import { EventBus } from 'aws-cdk-lib/aws-events'
 import { User } from 'aws-cdk-lib/aws-iam'
 import { BillingEventsReceivedProcessor } from './billing-events-received-processor'
 import { StripeProps } from './types'
+import { IntegrationConnectedBackfillProcessor } from './integration-connected-backfill-processor'
 
 export interface EventProcessorStackProps extends StackProps {
   databaseUrl: string
@@ -33,5 +34,15 @@ export class EventProcessorStack extends Stack {
       eventBus,
       stripe: props.stripe,
     })
+
+    new IntegrationConnectedBackfillProcessor(
+      this,
+      'integration-connected-backfill',
+      {
+        databaseUrl: props.databaseUrl,
+        eventBus,
+        stripe: props.stripe,
+      }
+    )
   }
 }

@@ -17,10 +17,17 @@ import { env } from '@/env'
 import { auth } from '@clerk/nextjs/server'
 import { billingAccounts, createConnection } from '@internal/database'
 import { eq } from 'drizzle-orm'
+import {
+  EventBridgeClient,
+  PutEventsCommand,
+} from '@aws-sdk/client-eventbridge'
+import { IntegrationConnectedEvent } from '@internal/events-schema'
 
 const connection = createConnection(env.DATABASE_URL)
 
 export const app = new OpenAPIHono()
+
+const eventBridgeClient = new EventBridgeClient()
 
 const list = createRoute({
   method: 'get',
@@ -249,6 +256,29 @@ app.openapi(post, async (c) => {
         { status: 400 }
       )
     }
+
+    await eventBridgeClient.send(
+      new PutEventsCommand({
+        Entries: [
+          {
+            Detail: JSON.stringify(
+              IntegrationConnectedEvent.toEventBridgeEventDetail(
+                {
+                  provider: params.integration,
+                  id: result.integration.id,
+                },
+                {
+                  orgId,
+                }
+              )
+            ),
+            DetailType: IntegrationConnectedEvent.eventName,
+            Source: 'app',
+            Time: new Date(),
+          },
+        ],
+      })
+    )
 
     const response = Integration.safeParse({
       id: result.integration.id,
